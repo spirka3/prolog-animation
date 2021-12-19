@@ -33,7 +33,7 @@ const App = () => {
     const sokoban = getSokoban(newConfig);
     const old_x = sokoban.x;
     const old_y = sokoban.y;
-    const d = action.split("_")[1];
+    const d = action;
     const new_x = old_x + directions[d].x;
     const new_y = old_y + directions[d].y;
     newConfig.cells = newConfig.cells.map((c) => {
@@ -61,7 +61,7 @@ const App = () => {
     const sokoban = getSokoban(newConfig);
     const old_x = sokoban.x;
     const old_y = sokoban.y;
-    const d = action.split("_")[1];
+    const d = action;
     const new_x = old_x + directions[d].x;
     const new_y = old_y + directions[d].y;
     const next_x = new_x + directions[d].x;
@@ -101,10 +101,17 @@ const App = () => {
       await timer(250);
       const action = plan[i];
       console.log("action", action);
-      if (action.includes("move")) {
-        newConfig = animateMove(action, newConfig);
-      } else {
+      const sokoban = getSokoban(newConfig);
+      const old_x = sokoban.x;
+      const old_y = sokoban.y;
+      const d = action;
+      const new_x = old_x + directions[d].x;
+      const new_y = old_y + directions[d].y;
+      const next = newConfig.cells.find((c) => c.x === new_x && c.y === new_y);
+      if (next.char === "C" || next.char === "c") {
         newConfig = animatePush(action, newConfig);
+      } else {
+        newConfig = animateMove(action, newConfig);
       }
       setMap(newConfig);
       setTick((prev) => prev + 1);
